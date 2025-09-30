@@ -1,0 +1,36 @@
+trigger:
+  branches:
+    include:
+      - main
+pr:
+  branches:
+    include:
+      - main      
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+
+  - task: DownloadBuildArtifacts@1
+    name: "DownloadArtifact"
+    displayName: "Download Artifact"
+    inputs:
+      buildType: 'specific'
+      project: 'a832cf39-4eb4-494b-b313-ce308627c1f4'
+      pipeline: '45'
+      buildVersionToDownload: 'latest'
+      downloadType: 'specific'
+      artifactName: 'soccerplayerartifact'
+      downloadPath: '$(Build.ArtifactsDirectory)'
+
+  - task: AzureWebApp@1
+    displayName: "Deploy to Azure"
+    name: "DeployToAzure"
+    inputs:
+      azureSubscription: 'ME-MngEnvMCAP261128-v-jeftev-1(9f110a54-b92f-4ab6-9740-199eff184024)'
+      appType: 'webAppLinux'
+      appName: 'LinuxDevOpsTraining'
+      package: '$(Build.ArtifactsDirectory)/**/*.zip'
+      deploymentMethod: 'auto'
+      runtimeStack: 'DOTNETCORE|8.0'

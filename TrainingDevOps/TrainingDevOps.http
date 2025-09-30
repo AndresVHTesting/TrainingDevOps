@@ -1,0 +1,43 @@
+@TrainingDevOps_HostAddress = http://localhost:8080
+
+### GET All Players
+GET {{TrainingDevOps_HostAddress}}/player
+Accept: application/json
+
+###
+
+### GET Single Player (e.g., ID 1)
+GET {{TrainingDevOps_HostAddress}}/player/1
+Accept: application/json
+
+###
+
+### POST Create Player
+POST {{TrainingDevOps_HostAddress}}/player
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "New Player",
+  "description": "A cool description"
+}
+
+###
+
+### PUT Update Player (e.g., ID 1)
+PUT {{TrainingDevOps_HostAddress}}/player/1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Updated Player Name",
+  "description": "Updated description"
+}
+
+###
+
+### DELETE Player (e.g., ID 3)
+DELETE {{TrainingDevOps_HostAddress}}/player/3
+Accept: application/json
+
+###

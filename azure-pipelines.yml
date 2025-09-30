@@ -1,0 +1,45 @@
+trigger:
+  branches:
+    include:
+      - dev
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildConfiguration: 'Release'
+  solution: '**/TrainingDevOps.sln'
+  project: '**/TrainingDevOps.csproj'
+  tests: '**/TrainingDevOpsTests.csproj'
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: "Restore Packages"
+  name: 'RestoreNuget'
+  inputs:
+    command: 'restore'
+    projects: '$(solution)'
+    
+- task: DotNetCoreCLI@2
+  name: 'UnitTest'
+  inputs:
+    command: 'test'
+    projects: '$(tests)'
+    arguments: '--configuration $(buildConfiguration)'
+    publishTestResults: true
+
+- task: DotNetCoreCLI@2
+  name: 'buildArtifact'
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: '$(project)'
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: true
+
+- task: PublishBuildArtifacts@1
+  name: 'publishArtifact'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'soccerplayerartifact'
+    publishLocation: 'Container'
